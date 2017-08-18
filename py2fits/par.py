@@ -10,7 +10,7 @@ import re
 numre = re.compile('(\d+[.]\d+D[+]\d+)|(-?\d+[.]\d+)')
 flagre = re.compile('-[a-zA-Z]')
 
-c = 2.9979e8 # meters / second
+c = 2.9979e8
 PC_TO_M = 3.086e16
 MAS_TO_RAD = np.pi/(180*60*60*1000)
 YR_TO_S = 3.154e7
@@ -34,13 +34,13 @@ class Parameter:
             if len(splitstring) == 0:
                 return None #?
             self.name = splitstring[0]
-
+                
 
             if flagre.match(splitstring[1][:2]) and len(splitstring)>=4: #flag present
                 self.flag = splitstring[1]
                 self.flagvalue = splitstring[2]
                 self.value = numwrap(splitstring[3])
-                if len(splitstring) >= 5:
+                if len(splitstring) >= 5:                                    
                     self.error = numwrap(splitstring[-1])
                     if len(splitstring) == 6:
                         self.fit = int(splitstring[4])
@@ -103,7 +103,7 @@ class Par:
             self.paramlist.append(p)
             self.paramnames.append(p.getName())
         self.paramnames = np.array(self.paramnames,dtype=np.str)
-        if type(filename) == str:
+        if type(filename) == str:                
             FILE.close()
 
 
@@ -165,7 +165,7 @@ class Par:
             PXerr = self.get("PX",error=True)
             if PX <= 0 or (PXerr is not None and PXerr>=np.abs(PX)):
                 return Pdot
-
+        
             PM = PM * self.numwrap(MAS_TO_RAD/YR_TO_S) #mas/yr -> rad/s
             D = self.numwrap(1000*PC_TO_M)/PX #kpc -> m
             Pdot_pm = P*PM**2 *D/self.numwrap(c) #s/s
@@ -177,8 +177,8 @@ class Par:
         return self.numwrap(1.0)/self.getPeriod()
     def getFrequencyDot(self,shklovskii=False):
         return self.numwrap(-1.0) * self.getPeriodDot(shklovskii=shklovskii) / self.getPeriod()**2
-
-
+        
+            
     def getPM(self):
         keys = self.paramnames
         PM = None
